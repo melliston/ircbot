@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"github.com/go-irc/irc"
 )
@@ -29,19 +30,20 @@ type BotAction struct {
 }
 
 type Bot struct {
-	Nick     string
-	Channel  string
-	Password string
-	Ident    string
-	User     string
-	Name     string
-	Server   string
-	Port     int
-	Client   *irc.Client
-	Verbose  bool
-	Debug    bool
-	Admins   map[string]bool
-	Actions  []BotAction
+	Nick      string
+	Channel   string
+	Password  string
+	Ident     string
+	User      string
+	Name      string
+	Server    string
+	Port      int
+	Client    *irc.Client
+	Verbose   bool
+	Debug     bool
+	Admins    map[string]bool
+	Actions   []BotAction
+	Connected time.Time
 }
 
 func NewBot(opt BotOptions) (*Bot, error) {
@@ -93,6 +95,9 @@ func (b *Bot) Connect() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	// Set the connected time
+	b.Connected = time.Now()
 }
 
 func (b *Bot) AddAction(a BotAction) {
@@ -105,19 +110,17 @@ func (b *Bot) Handler(c *irc.Client, m *irc.Message) {
 		fmt.Println(m.User)
 		fmt.Println(m.Prefix)
 		fmt.Println(m.Params)
+		fmt.Println(m.Trailing())
 	}
 
 	for _, action := range b.Actions {
 		action.Action(c, m, b)
 	}
-	// if m.Command == "PRIVMSG" && c.FromChannel(m) {
-	// 	// Create a handler on all messages.
-	// 	c.WriteMessage(&irc.Message{
-	// 		Command: "PRIVMSG",
-	// 		Params: []string{
-	// 			m.Params[0],
-	// 			m.Trailing(),
-	// 		},
-	// 	})
-	// }
+}
+
+// Uptime - Returns a human readable timestamp for the amount of time the bot has been up.
+func (b *Bot) Uptime() string {
+	now := time.Now()
+	d := now.Sub(b.Connected)
+	return fmt.Sprintf("Uptime: %s", d)
 }

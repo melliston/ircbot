@@ -7,8 +7,12 @@ import (
 	"github.com/mpgelliston/ircbot/bot"
 )
 
+const (
+	WELCOME_TRIGGER string = "JOIN"
+)
+
 func WelcomeAction(c *irc.Client, m *irc.Message, b *bot.Bot) {
-	if m.Command == "JOIN" {
+	if m.Command == WELCOME_TRIGGER {
 		c.WriteMessage(&irc.Message{
 			Command: "PRIVMSG",
 			Params: []string{

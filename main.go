@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mpgelliston/ircbot/action"
+	"github.com/mpgelliston/ircbot/actions"
 	"github.com/mpgelliston/ircbot/bot"
 )
 
@@ -31,11 +31,30 @@ func main() {
 	}
 
 	fmt.Println("Attaching Actions")
-	a := bot.BotAction{
+	b.AddAction(bot.BotAction{
 		Name:   "Join",
-		Action: action.Join,
-	}
-	b.AddAction(a)
+		Action: actions.JoinAction,
+	})
+	b.AddAction(bot.BotAction{
+		Name:   "Welcome",
+		Action: actions.WelcomeAction,
+	})
+	b.AddAction(bot.BotAction{
+		Name:   "Sexy",
+		Action: actions.SexyAction,
+	})
+	b.AddAction(bot.BotAction{
+		Name:   "List Actions",
+		Action: actions.ListActionsAction,
+	})
+	b.AddAction(bot.BotAction{
+		Name:   "Uptime",
+		Action: actions.UptimeAction,
+	})
+	b.AddAction(bot.BotAction{
+		Name:   "Crypto",
+		Action: actions.CryptoPriceAction,
+	})
 
 	// Create the client
 	b.Connect()

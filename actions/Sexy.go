@@ -5,8 +5,13 @@ import (
 	"github.com/mpgelliston/ircbot/bot"
 )
 
+const (
+	SEXY_TRIGGER string = "PRIVMSG"
+)
+
 func SexyAction(c *irc.Client, m *irc.Message, b *bot.Bot) {
-	if m.Command == "PRIVMSG" && b.Admins[m.Prefix.Name] {
+	phrase := "Hi " + b.Nick
+	if m.Command == SEXY_TRIGGER && m.Trailing() == phrase {
 		c.WriteMessage(&irc.Message{
 			Command: "PRIVMSG",
 			Params: []string{
